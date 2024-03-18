@@ -1,24 +1,23 @@
 #!/usr/bin/python3
-"""
-Defines a square class.
-"""
+'''Module for Square class.'''
 from models.rectangle import Rectangle
 
 
 class Square(Rectangle):
-    """
-    Represent a square.
-    """
+    '''A Square class.'''
 
     def __init__(self, size, x=0, y=0, id=None):
-        """
-        Initialize a new Square.
-        """
+        '''Constructor.'''
         super().__init__(size, size, x, y, id)
+
+    def __str__(self):
+        '''Returns string info about this square.'''
+        return '[{}] ({}) {}/{} - {}'.\
+            format(type(self).__name__, self.id, self.x, self.y, self.width)
 
     @property
     def size(self):
-        """Get/set the size of the Square."""
+        '''Size of this square.'''
         return self.width
 
     @size.setter
@@ -26,47 +25,25 @@ class Square(Rectangle):
         self.width = value
         self.height = value
 
-    def update(self, *args, **kwargs):
-        """
-        Update the Square.
-        """
-        if args and len(args) != 0:
-            for count, arg in enumerate(args):
-                if count == 0:
-                    self.id = arg
-                elif count == 1:
-                    self.size = arg
-                elif count == 2:
-                    self.x = arg
-                elif count == 3:
-                    self.y = arg
-                else: continue
+    def __update(self, id=None, size=None, x=None, y=None):
+        '''Internal method that updates instance attributes via */**args.'''
+        if id is not None:
+            self.id = id
+        if size is not None:
+            self.size = size
+        if x is not None:
+            self.x = x
+        if y is not None:
+            self.y = y
 
-        elif len(kwargs) > 0:
-            for key, value in kwargs.items():
-                if key == "id":
-                    self.id = value
-                elif key == "size":
-                    self.size = value
-                elif key == "x":
-                    self.x = value
-                elif key == "y":
-                    self.y = value
-                # removed the break statement, incase if the passed args are greater
-                # than 5, and one of the attributes is at the end
+    def update(self, *args, **kwargs):
+        '''Updates instance attributes via no-keyword & keyword args.'''
+        if args:
+            self.__update(*args)
+        elif kwargs:
+            self.__update(**kwargs)
 
     def to_dictionary(self):
-        """Return the dictionary representation of the Square."""
-        square_dict = {
-            "id": self.id,
-            "size": self.width,
-            "x": self.x,
-            "y": self.y
-        }
-
-        return square_dict
-
-    def __str__(self):
-        """Return the print() and str() representation of a Square."""
-        return "[Square] ({}) {}/{} - {}".format(self.id, self.x, self.y,
-                                                 self.width)
+        '''Returns dictionary representation of this class.'''
+        return {"id": self.id, "size": self.width,
+                "x": self.x, "y": self.y}
